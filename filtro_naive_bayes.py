@@ -6,7 +6,7 @@ from nltk import download
 import itertools
 import string
 import numpy as np
-from lectura import readEmails, cleanText, read_email, readBodies
+from lectura import readEmails, cleanText, read_email
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 

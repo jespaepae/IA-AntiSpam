@@ -79,32 +79,6 @@ def read_email(url):
     return subject
 # Función para eliminar los signos de puntuación de un texto dado
 
-def readBodies(url):
-    url = str(url)
-    mails = []
-    i = 0
-    for s in glob.glob(url+"*"):
-        with open(url+s.split("\\")[1]) as file_:
-            email_message = email.message_from_file(file_)
-            
-            for part in email_message.walk():
-                body = ''
-                clean_body = ''
-                if part.get_content_type() == "text/plain":
-                    body = part.get_payload(decode=True)
-                    body= body.decode()
-                elif part.get_content_type() == "text/html":
-                    html_body = part.get_payload(decode=True)
-                    body = html_body.decode()
-                
-                htmlParse = BeautifulSoup(body, 'html.parser')
-                mails.append(htmlParse.getText())
-                
-        if i >= 10:
-            break
-        i=i+1
-    return mails
-
 def cleanText(text):
     punctuations = []
     words = ''
