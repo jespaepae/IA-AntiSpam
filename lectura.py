@@ -21,6 +21,24 @@ def readEmails(url):
     mails = []
     i = 0
     for s in glob.glob(url+"*"):
+        with open(url+s.split("\\")[1]) as file_:
+            mail = email.message_from_file(file_)
+            mails.append(mail.get("Subject"))
+        
+    return mails
+
+# Función para leer un email dado una url
+def read_email(url):
+    subject = []
+    with open(url) as file_:
+            mail = email.message_from_file(file_)
+            subject.append(mail.get("Subject"))
+    return subject
+def readEmailsWithBody(url):
+    url = str(url)
+    mails = []
+    i = 0
+    for s in glob.glob(url+"*"):
         with open(url+s.split("\\")[1], encoding='unicode_escape', errors='ignore') as file_:
             mail = email.message_from_file(file_)
             
@@ -43,10 +61,10 @@ def readEmails(url):
                     htmlParse = BeautifulSoup(body, 'html.parser')
                     if htmlParse.getText() is not None:
                         text=text+htmlParse.getText()
-        if i>=300:
+        if i>=100:
             break
         i+=1
-        print(i)
+        
         
                 
         mails.append(text)

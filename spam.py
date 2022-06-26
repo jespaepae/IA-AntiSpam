@@ -1,7 +1,7 @@
 from nltk.lm.vocabulary import Vocabulary
 from nltk import download
 import itertools
-from lectura import readEmails, cleanText, read_email
+from lectura import readEmails, cleanText, read_email, readEmailsWithBody
 from filtro_naive_bayes import entrenar_modelo, clasificador_nb
 from filtro_tf_idf import entrenar_tf_idf
 import numpy as np
@@ -10,7 +10,6 @@ download('punkt', download_dir='.')
 download('stopwords')
 
 spam_subjects = readEmails("Enron-Spam-Splited/train/no_deseado/") #9494
-print(spam_subjects)
 ham_subjects = readEmails("Enron-Spam-Splited/train/legítimo/")   #10828
 
 clean_spam_subjects = [cleanText(s) for s in spam_subjects]
