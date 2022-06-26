@@ -6,7 +6,7 @@ from nltk import download
 import itertools
 import string
 import numpy as np
-from lectura import readEmails, cleanText, read_email
+from lectura import readEmails, cleanText, read_email, readBodies
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
@@ -26,9 +26,9 @@ def entrenar_modelo(clean_subjects):
     #Creamos un array, en el que los primeros elementos serán 1s, indicándole al clasificador que los correos correspondientes son considerados spam, 
     #y los últimos elementos serán 0s, que se corresponden con correos legítimos.
     y = []
-    for i in range(11):  #9494 correos de entrenamiento que son spam
+    for i in range(51):  #9494 correos de entrenamiento que son spam
         y.append(1)
-    for i in range(11): #10828 correos del conjunto de entrenamiento 
+    for i in range(51): #10828 correos del conjunto de entrenamiento 
         y.append(0)
     y = np.array(y)
     #Entrenamos el clasificador de Naive Bayes Multinomial con el conjunto de entrenamiento y mostramos cómo clasificaría los 50 primeros correos del 

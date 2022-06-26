@@ -9,7 +9,7 @@ from nltk.corpus import stopwords
 from nltk.data import load
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
-
+from bs4 import BeautifulSoup
 download('punkt', download_dir='.')
 download('stopwords')
 
@@ -21,10 +21,26 @@ def readEmails(url):
     mails = []
     i = 0
     for s in glob.glob(url+"*"):
-        with open(url+s.split("\\")[1]) as file_:
+        with open(url+s.split("\\")[1], encoding='unicode_escape', errors='ignore') as file_:
             mail = email.message_from_file(file_)
-            mails.append(mail.get("Subject"))
-        if i >= 10:
+            
+            text = mail.get("Subject")
+            for part in mail.walk():
+                body = ''
+                clean_body = ''
+                if part.get_content_type() == "text/plain":
+                    body = part.get_payload(decode=True)
+                    body= body.decode('latin-1')
+                    htmlParse = BeautifulSoup(body, 'html.parser')
+                    text=text+htmlParse.getText()
+                elif part.get_content_type() == "text/html":
+                    html_body = part.get_payload(decode=True)
+                    body = html_body.decode('latin-1')
+                    htmlParse = BeautifulSoup(body, 'html.parser')
+                    text=text+htmlParse.getText()
+                
+        mails.append(text)
+        if i >= 50:
             break
         i=i+1
     return mails
@@ -37,6 +53,32 @@ def read_email(url):
             subject.append(mail.get("Subject"))
     return subject
 # Función para eliminar los signos de puntuación de un texto dado
+
+def readBodies(url):
+    url = str(url)
+    mails = []
+    i = 0
+    for s in glob.glob(url+"*"):
+        with open(url+s.split("\\")[1]) as file_:
+            email_message = email.message_from_file(file_)
+            
+            for part in email_message.walk():
+                body = ''
+                clean_body = ''
+                if part.get_content_type() == "text/plain":
+                    body = part.get_payload(decode=True)
+                    body= body.decode()
+                elif part.get_content_type() == "text/html":
+                    html_body = part.get_payload(decode=True)
+                    body = html_body.decode()
+                
+                htmlParse = BeautifulSoup(body, 'html.parser')
+                mails.append(htmlParse.getText())
+                
+        if i >= 10:
+            break
+        i=i+1
+    return mails
 
 def cleanText(text):
     punctuations = []
