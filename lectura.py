@@ -25,24 +25,31 @@ def readEmails(url):
             mail = email.message_from_file(file_)
             
             text = mail.get("Subject")
+            if text is None:
+                text=''
             for part in mail.walk():
                 body = ''
                 clean_body = ''
+                
                 if part.get_content_type() == "text/plain":
                     body = part.get_payload(decode=True)
                     body= body.decode('latin-1')
                     htmlParse = BeautifulSoup(body, 'html.parser')
-                    text=text+htmlParse.getText()
+                    if htmlParse.getText() is not None:
+                        text=text+htmlParse.getText()
                 elif part.get_content_type() == "text/html":
                     html_body = part.get_payload(decode=True)
                     body = html_body.decode('latin-1')
                     htmlParse = BeautifulSoup(body, 'html.parser')
-                    text=text+htmlParse.getText()
+                    if htmlParse.getText() is not None:
+                        text=text+htmlParse.getText()
+        if i>=300:
+            break
+        i+=1
+        print(i)
+        
                 
         mails.append(text)
-        if i >= 50:
-            break
-        i=i+1
     return mails
 
 # Función para leer un email dado una url
